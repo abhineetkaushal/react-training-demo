@@ -3,29 +3,27 @@ import AddBookComponent from './components/Book/AddBookComponent';
 import Footer from './components/Footer'
 import Header from './components/Header'
 import Main from './components/Main';
-import { getBooks } from './services/book';
 import "./App.css"
-import { Book } from './types/apiResponse';
+import { useDispatch, useSelector } from 'react-redux';
+import { getBookList } from './store/actions/book';
+import { incrementCount } from './store/actions/count';
+import { INCREMENT } from './store/constants';
 
-function useAdd(a:number,b:number){
-    const [list,setList] = useState([]);
-    return <div>
-        {a+b}
-    </div>;
-}
+ 
 
 function App(){
-    const bool = false;
-    const [list,setList] = useState<Book[]>([]);
-    const [age,setAge] = useState(20);
+    // const [list,setList] = useState([]);
+    // const [age,setAge] = useState(20);
+    const age = useSelector(state=>state.countState.count)
+    const bookState = useSelector(state=>state.book)
+    const dispatch = useDispatch();
+    console.log({bookState})
     useEffect(()=>{
-        getBooks()
-        .then((res)=>{
-            setList(res.data)
-            console.log("This is getting called",res.data)
-        })
-
+        dispatch(getBookList());
     },[])
+    const setAge = ()=>{
+      dispatch({type:INCREMENT})
+    }    
     
 
     return <div className="App">
@@ -34,7 +32,9 @@ function App(){
          Increase {age}
     </button>
     <AddBookComponent/>
-    <Main list={list}/>
+    {bookState.loading && <div>Loading...</div>}
+    {bookState.error && <div>Failed to Load</div>}
+    <Main list={bookState.list}/>
     <Footer title={"This is footer"}/>
    
   </div>

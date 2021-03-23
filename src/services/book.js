@@ -1,8 +1,9 @@
+import axios from "axios";
 import { CREATE_BOOK_URL, GET_BOOKS_URL } from "../constants/api"
 
 export const getBooks = ()=>{
-   return fetch(GET_BOOKS_URL)
-    .then(response => response.json());
+   return axios(GET_BOOKS_URL).then(res=>res.data);
+    // .then(response => response.json());
     // .then(response=>console.log(response))
 }
 
